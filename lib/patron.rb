@@ -17,12 +17,14 @@ class Patron
     patrons_list.each() do |patron|
       name = patron['name']
       phone = patron['phone']
-      patrons.push(Patron.new(:name => name, :phone => phone))
+      id = patron['id'].to_i()
+      patrons.push(Patron.new({:id => id, :name => name, :phone => phone}))
     end
   patrons
   end
-  def save
-    DB.exec("INSERT INTO patrons (name, phone) VALUES ('#{@name}', #{@phone});")
-  end
 
+  def save
+    result = DB.exec("INSERT INTO patrons (name, phone) VALUES ('#{@name}', #{@phone}) RETURNING id;")
+    @id = result.first().fetch("id").to_i()
+  end
 end

@@ -19,13 +19,25 @@ class Book
       title = book['title']
       authors = book['authors']
       genre = book['genre']
-      books.push(Book.new({:title => title, :authors => authors, :genre => genre}))
+      id = book['id'].to_i()
+      books.push(Book.new({:id => id, :title => title, :authors => authors, :genre => genre}))
     end
     books
   end
 
   def save
-    DB.exec("INSERT INTO books (title, authors, genre) VALUES ('#{@title}', '#{@authors}', '#{@genre}');")
+    result = DB.exec("INSERT INTO books (title, authors, genre) VALUES ('#{@title}', '#{@authors}', '#{@genre}') RETURNING id;")
+    @id = result.first().fetch('id').to_i()
+  end
+
+  def self.find(id)
+    found_book = nil
+    Book.all().each() do |book|
+      if book.id() == id.to_i()
+        found_book = book
+      end
+    end
+    found_book
   end
 
 end
