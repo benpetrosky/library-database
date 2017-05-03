@@ -27,4 +27,14 @@ class Patron
     result = DB.exec("INSERT INTO patrons (name, phone) VALUES ('#{@name}', #{@phone}) RETURNING id;")
     @id = result.first().fetch("id").to_i()
   end
+
+  def self.find(id)
+    found_patron = nil
+    Patron.all().each() do |patron|
+      if patron.id() == id.to_i()
+        found_patron = patron
+      end
+    end
+    found_patron
+  end
 end

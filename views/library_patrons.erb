@@ -1,3 +1,6 @@
+<ul>
+  <% @patrons.each() do |patron| %>
+  <li><a href="/patron/<%=patron.id()%>"><%=patron.name()%></a></li>
 
-
-@patrons 
+    <%end%>
+</ul>

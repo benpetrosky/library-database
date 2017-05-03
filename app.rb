@@ -34,3 +34,23 @@ get('/book_catalog') do
   @books = Book.all()
   erb(:book_catalog)
 end
+
+get('/patrons/new') do
+  erb(:patron_form)
+end
+
+post('/patron_info') do
+  name = params['name']
+  phone = params['phone']
+
+  @patron = Patron.new({:id => nil, :name => name, :phone => phone})
+
+  @patron.save()
+  @patrons = Patron.all()
+  erb(:library_patrons)
+end
+
+get('/patron/:id') do
+  @patron = Patron.find(params['id'])
+  erb(:patron_details)
+end
