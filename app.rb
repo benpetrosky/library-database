@@ -3,7 +3,9 @@ require("sinatra/reloader")
 also_reload("lib/**/*.rb")
 require("./lib/book")
 require("./lib/patron")
+require("./lib/checkout")
 require("pg")
+require('pry')
 
 DB = PG.connect({:dbname => "library"})
 
@@ -44,7 +46,6 @@ post('/patron_info') do
   phone = params['phone']
 
   @patron = Patron.new({:id => nil, :name => name, :phone => phone})
-
   @patron.save()
   @patrons = Patron.all()
   erb(:library_patrons)
@@ -53,4 +54,20 @@ end
 get('/patron/:id') do
   @patron = Patron.find(params['id'])
   erb(:patron_details)
+end
+
+get('/library_patrons') do
+  @patrons = Patron.all()
+  erb(:library_patrons)
+end
+
+post('/checkout') do
+  book_id = params['book_id'].to_i()
+  patron_name = params['patron_name']
+  patron_id = Patron.find_by_name(patron_name)
+  checkout_date = Time.now().to_date()
+  due_date = checkout_date
+  new_checkout = Checkout.new({:id => nil, :book_id => book_id, :patron_id => patron_id, :checkout_date => checkout_date, :due_date => due_date})
+  new_checkout.save()
+  erb(:successful_checkout)
 end

@@ -3,4 +3,13 @@
 <h3>Authors: <%= @book.authors() %></h3>
 <h3>Genre: <%= @book.genre() %></h3>
 
+<form action="/checkout" method="post">
+  <input type="hidden" name="book_id" value="<%= @book.id() %>">
+
+  <label for="patron_name">Enter your name to check out this book:</label>
+  <input type="text" name="patron_name">
+
+  <button type="submit" name="button">Check Out</button>
+</form>
+
 <a href="/"> Back to Home page</a>

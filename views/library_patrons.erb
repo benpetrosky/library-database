@@ -1,6 +1,10 @@
+<h2>Patrons of Epicodus Library</h2>
+
 <ul>
   <% @patrons.each() do |patron| %>
   <li><a href="/patron/<%=patron.id()%>"><%=patron.name()%></a></li>
 
     <%end%>
 </ul>
+
+<a href="/">Back to Home</a>

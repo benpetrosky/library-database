@@ -37,4 +37,15 @@ class Patron
     end
     found_patron
   end
+
+  def self.find_by_name(name)
+    found_patron = nil
+    Patron.all().each() do |patron|
+      if patron.name() == name
+        found_patron = patron
+      end
+    end
+    patron_id = found_patron.id()
+  end
+
 end
