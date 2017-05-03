@@ -18,9 +18,17 @@ describe(Patron) do
       expect(patron1).to(eq(patron2))
     end
   end
+
   describe('.all') do
     it('returns all the patrons in the library database') do
       expect(Patron.all()).to(eq([]))
+    end
+  end
+  describe('#save') do
+    it('adds a patron to the library database') do
+      test_patron = Patron.new({:id => nil, :name => 'Billy Bob', :phone => '5558907'})
+      test_patron.save()
+      expect(Patron.all()).to(eq([test_patron]))
     end
   end
 end

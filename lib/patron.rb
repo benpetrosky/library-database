@@ -10,15 +10,19 @@ class Patron
   def ==(other_patron)
     self.name() == other_patron.name() && self.phone() == other_patron.phone()
   end
+
   def self.all
     patrons_list = DB.exec("SELECT * FROM patrons;")
     patrons = []
     patrons_list.each() do |patron|
       name = patron['name']
       phone = patron['phone']
-
       patrons.push(Patron.new(:name => name, :phone => phone))
     end
   patrons
   end
+  def save
+    DB.exec("INSERT INTO patrons (name, phone) VALUES ('#{@name}', #{@phone});")
+  end
+
 end
