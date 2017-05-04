@@ -1,5 +1,33 @@
 <h2><%= @patron.name() %></h2>
 
-<h3>Phone: <%= @patron.phone() %></h3>
+<h2>Phone: <%= @patron.phone() %></h2>
+
+<% if @books.any?() %>
+  <h3>Select the books that <%= @patron.name() %> is checking out:</h3>
+  <form action='/patron/<%= @patron.id() %>' method='post'>
+    <input type='hidden' name='_method' value='patch'>
+
+    <% @books.each() do |book| %>
+      <div class='checkbox'>
+        <label>
+          <input type='checkbox' name='book_ids[]' value='<%= book.id() %>'><%= book.title() %>
+        </label>
+      </div>
+    <% end %>
+
+    <button type="sbumit" name="button">Checkout Books</button>
+  </form>
+<% end %>
+
+<% if @patron.books().any?() %>
+  <h3>Here is <%= @patron.name() %>'s' checkout history:</h3>
+  <ul>
+    <% @patron.books().each() do |book| %>
+      <li><%= book.title() %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>This person has not checked out any books yet.</p>
+<% end %>
 
 <a href="/">Back to Home</a>

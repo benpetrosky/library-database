@@ -3,13 +3,41 @@
 <h3>Authors: <%= @book.authors() %></h3>
 <h3>Genre: <%= @book.genre() %></h3>
 
-<form action="/checkout" method="post">
-  <input type="hidden" name="book_id" value="<%= @book.id() %>">
+<h3>Here are all the patrons of the library</h3>
 
-  <label for="patron_name">Enter your name to check out this book:</label>
-  <input type="text" name="patron_name">
+<p>As a librarian your job is to track all the patrons that have checked out this book. select all the patrons that have checked out this book.</p>
 
-  <button type="submit" name="button">Check Out</button>
-</form>
+<% if @patrons.any?() %>
+  <form action="/books/<%= @book.id() %>" method="post">
+    <input type="hidden" name="_method" value="patch">
+    <% @patrons.each() do |patron| %>
+
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="patron_ids[]" value="<%=patron.id()%>"> <%= patron.name() %>
+      </label>
+    </div>
+    <% end %>
+
+    <button type="submit">Add this Patron</button>
+  </form>
+  <% end%>
+
+<% if @book.patrons().any? %>
+<h3>Here is a list of all of the patrons that have checked out <%= @book.title()%>.</h3>
+
+<ul>
+  <% @book.patrons().each() do |patron| %>
+    <li><%= patron.name() %></li>
+    <% end %>
+</ul>
+
+<% else %>
+  <p>
+    No one has checked out this book yet.
+  </p>
+
+  <% end %>
+
 
 <a href="/"> Back to Home page</a>
