@@ -15,7 +15,7 @@
       </div>
     <% end %>
 
-    <button type="sbumit" name="button">Checkout Books</button>
+    <button type="submit" name="button">Checkout Books</button>
   </form>
 <% end %>
 
@@ -29,5 +29,13 @@
 <% else %>
   <p>This person has not checked out any books yet.</p>
 <% end %>
+
+<form action='/library_patrons/<%= @patron.id() %>' method='post'>
+  <input type='hidden' name='_method' value='delete'>
+
+  <p>If <%=@patron.name() %> is no longer a patron of Epicodus Library:</p>
+  <button type="submit" name="button">Delete</button>
+
+</form>
 
 <a href="/">Back to Home</a>

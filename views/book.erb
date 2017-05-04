@@ -38,6 +38,13 @@
   </p>
 
   <% end %>
+<form action="/books/<%= @book.id()%>" method="post">
 
+  <input type="hidden" name="_method" value="delete">
+  <p>
+    If the library no longer has <%= @book.title() %>, remove it from our database.
+  </p>
+  <button type="submit" name="button">Delete</button>
+</form>
 
 <a href="/"> Back to Home page</a>

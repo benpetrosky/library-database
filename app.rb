@@ -41,6 +41,13 @@ patch("/books/:id") do
   erb(:book)
 end
 
+delete('/books/:id') do
+  @book = Book.find(params['id'].to_i())
+  @book.delete()
+  @books = Book.all()
+  erb(:book_catalog)
+end
+
 get('/book_catalog') do
   @books = Book.all()
   erb(:book_catalog)
@@ -71,6 +78,13 @@ patch('/patron/:id') do
   @patron.update({:book_ids => book_ids})
   @books = Book.all()
   erb(:patron_details)
+end
+
+delete('/library_patrons/:id') do
+  @patron = Patron.find(params['id'])
+  @patron.delete()
+  @patrons = Patron.all()
+  erb(:library_patrons)
 end
 
 get('/library_patrons') do
