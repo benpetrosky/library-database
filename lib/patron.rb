@@ -38,14 +38,34 @@ class Patron
     found_patron
   end
 
-  def self.find_by_name(name)
-    found_patron = nil
-    Patron.all().each() do |patron|
-      if patron.name() == name
-        found_patron = patron
-      end
+  def update(attributes)
+    @name = attributes.fetch(:name, @name)
+    @phone = attributes.fetch(:phone, @phone)
+    @id = self.id()
+    DB.exec("UPDATE patrons SET (name, phone) = ('#{@name}', '#{@phone}') WHERE id = #{@id};")
+
+    attributes.fetch(:book_ids, []).each() do |book_id|
+      DB.exec("INSERT INTO checkouts (book_id, patron_id) VALUES (#{book_id}, #{self.id()});")
     end
-    patron_id = found_patron.id()
+  end
+
+  def books
+    patron_book_history = []
+    results = DB.exec("SELECT book_id FROM checkouts WHERE patron_id = #{self.id()};")
+    results.each() do |result|
+      book_id = result.fetch('book_id').to_i()
+      book = DB.exec("SELECT * FROM books WHERE id = #{book_id};")
+      title = book.first().fetch('title')
+      authors = book.first().fetch('authors')
+      genre = book.first().fetch('genre')
+      patron_book_history.push(Book.new({:id => book_id, :title => title, :authors => authors, :genre => genre}))
+    end
+    patron_book_history
+  end
+
+  def delete
+    DB.exec("DELETE FROM patrons WHERE id = #{self.id()};")
+    DB.exec("DELETE FROM checkouts WHERE patron_id = #{self.id()};")
   end
 
 end

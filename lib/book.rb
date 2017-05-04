@@ -40,4 +40,34 @@ class Book
     found_book
   end
 
+  def update(attributes)
+    @title = attributes.fetch(:title, @title)
+    @id = self.id()
+    @authors = attributes.fetch(:authors, @authors)
+    @genre = attributes.fetch(:genre, @genre)
+
+    DB.exec("UPDATE books SET (title, authors, genre) = ('#{@title}', '#{@authors}', '#{@genre}') WHERE id = #{@id};")
+
+    attributes.fetch(:patron_ids, []).each() do |patron_id|
+      DB.exec("INSERT INTO checkouts (book_id, patron_id) VALUES (#{self.id()}, #{patron_id});")
+    end
+  end
+
+  def delete
+    DB.exec("DELETE FROM books WHERE id = #{self.id()};")
+    DB.exec("DELETE FROM checkouts WHERE book_id = #{self.id()};")
+  end
+
+  def patrons
+    book_checkout_history = []
+    results = DB.exec("SELECT patron_id FROM checkouts WHERE book_id = #{self.id()};")
+    results.each() do |result|
+      patron_id = result.fetch('patron_id').to_i()
+      patron = DB.exec("SELECT * FROM patrons WHERE id = #{patron_id};")
+      name = patron.first().fetch('name')
+      phone = patron.first().fetch('phone')
+      book_checkout_history.push(Patron.new({:id => patron_id, :name => name, :phone => phone}))
+    end
+    book_checkout_history
+  end
 end
